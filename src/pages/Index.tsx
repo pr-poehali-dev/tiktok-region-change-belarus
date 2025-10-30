@@ -12,14 +12,45 @@ type Region = {
   name: string;
   flag: string;
   vpnCode: string;
+  vpnUrl: string;
 };
 
 const regions: Region[] = [
-  { code: 'BY', name: 'Беларусь', flag: '🇧🇾', vpnCode: 'BY-MSK-5729' },
-  { code: 'RU', name: 'Россия', flag: '🇷🇺', vpnCode: 'RU-SPB-8142' },
-  { code: 'KZ', name: 'Казахстан', flag: '🇰🇿', vpnCode: 'KZ-ALA-3956' },
-  { code: 'UA', name: 'Украина', flag: '🇺🇦', vpnCode: 'UA-KIV-6283' },
-  { code: 'US', name: 'США', flag: '🇺🇸', vpnCode: 'US-NYC-9417' },
+  { 
+    code: 'BY', 
+    name: 'Беларусь', 
+    flag: '🇧🇾', 
+    vpnCode: 'BY-MSK-5729',
+    vpnUrl: 'https://v401608.hosted-by-vdsina.com:2096/sub/TrueVPN_91542836?name=TrueVPN-BY'
+  },
+  { 
+    code: 'RU', 
+    name: 'Россия', 
+    flag: '🇷🇺', 
+    vpnCode: 'RU-SPB-8142',
+    vpnUrl: 'https://v401608.hosted-by-vdsina.com:2096/sub/TrueVPN_84729153?name=TrueVPN-RU'
+  },
+  { 
+    code: 'KZ', 
+    name: 'Казахстан', 
+    flag: '🇰🇿', 
+    vpnCode: 'KZ-ALA-3956',
+    vpnUrl: 'https://v401608.hosted-by-vdsina.com:2096/sub/TrueVPN_62849371?name=TrueVPN-KZ'
+  },
+  { 
+    code: 'UA', 
+    name: 'Украина', 
+    flag: '🇺🇦', 
+    vpnCode: 'UA-KIV-6283',
+    vpnUrl: 'https://v401608.hosted-by-vdsina.com:2096/sub/TrueVPN_51938472?name=TrueVPN-UA'
+  },
+  { 
+    code: 'US', 
+    name: 'США', 
+    flag: '🇺🇸', 
+    vpnCode: 'US-NYC-9417',
+    vpnUrl: 'https://v401608.hosted-by-vdsina.com:2096/sub/TrueVPN_73846291?name=TrueVPN-US'
+  },
 ];
 
 const Index = () => {
@@ -60,6 +91,11 @@ const Index = () => {
   const copyVpnCode = () => {
     navigator.clipboard.writeText(selectedRegion.vpnCode);
     toast.success('VPN код скопирован!');
+  };
+
+  const copyVpnUrl = () => {
+    navigator.clipboard.writeText(selectedRegion.vpnUrl);
+    toast.success('VPN ссылка скопирована!');
   };
 
   const navItems = [
@@ -129,6 +165,24 @@ const Index = () => {
               </div>
               <p className="text-xs text-muted-foreground text-center">
                 Используйте этот код для подключения к VPN
+              </p>
+            </Card>
+
+            <Card className="glass p-6 border-border">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <Icon name="Link" size={20} />
+                VPN Подписка
+              </h3>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="flex-1 bg-muted/20 rounded-lg p-3 font-mono text-xs break-all">
+                  {selectedRegion.vpnUrl}
+                </div>
+                <Button onClick={copyVpnUrl} size="icon" variant="outline">
+                  <Icon name="Copy" size={18} />
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground text-center">
+                Ссылка для импорта конфигурации VPN
               </p>
             </Card>
 
