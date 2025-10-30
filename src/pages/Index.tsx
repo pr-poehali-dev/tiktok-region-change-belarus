@@ -181,7 +181,24 @@ const Index = () => {
                   <Icon name="Copy" size={18} />
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground text-center">
+              <div className="flex gap-2">
+                <Button 
+                  onClick={() => window.open(selectedRegion.vpnUrl, '_blank')}
+                  className="flex-1 bg-primary hover:bg-primary/90"
+                >
+                  <Icon name="ExternalLink" size={18} className="mr-2" />
+                  Открыть в VPN
+                </Button>
+                <Button 
+                  onClick={copyVpnUrl}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  <Icon name="Copy" size={18} className="mr-2" />
+                  Копировать
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground text-center mt-3">
                 Ссылка для импорта конфигурации VPN
               </p>
             </Card>
