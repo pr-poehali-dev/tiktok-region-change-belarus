@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
 
@@ -9,14 +11,15 @@ type Region = {
   code: string;
   name: string;
   flag: string;
+  vpnCode: string;
 };
 
 const regions: Region[] = [
-  { code: 'BY', name: 'Беларусь', flag: '🇧🇾' },
-  { code: 'RU', name: 'Россия', flag: '🇷🇺' },
-  { code: 'KZ', name: 'Казахстан', flag: '🇰🇿' },
-  { code: 'UA', name: 'Украина', flag: '🇺🇦' },
-  { code: 'US', name: 'США', flag: '🇺🇸' },
+  { code: 'BY', name: 'Беларусь', flag: '🇧🇾', vpnCode: 'BY-MSK-5729' },
+  { code: 'RU', name: 'Россия', flag: '🇷🇺', vpnCode: 'RU-SPB-8142' },
+  { code: 'KZ', name: 'Казахстан', flag: '🇰🇿', vpnCode: 'KZ-ALA-3956' },
+  { code: 'UA', name: 'Украина', flag: '🇺🇦', vpnCode: 'UA-KIV-6283' },
+  { code: 'US', name: 'США', flag: '🇺🇸', vpnCode: 'US-NYC-9417' },
 ];
 
 const Index = () => {
@@ -24,6 +27,7 @@ const Index = () => {
   const [isAutoRegion, setIsAutoRegion] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState<Region>(regions[0]);
   const [isConnected, setIsConnected] = useState(false);
+  const [vpnInput, setVpnInput] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -41,6 +45,21 @@ const Index = () => {
       setIsConnected(true);
       toast.success(`Регион изменен на ${region.name} ${region.flag}`);
     }, 1000);
+  };
+
+  const handleVpnConnect = () => {
+    const foundRegion = regions.find(r => r.vpnCode === vpnInput.trim());
+    if (foundRegion) {
+      handleRegionChange(foundRegion);
+      setVpnInput('');
+    } else {
+      toast.error('Неверный VPN код');
+    }
+  };
+
+  const copyVpnCode = () => {
+    navigator.clipboard.writeText(selectedRegion.vpnCode);
+    toast.success('VPN код скопирован!');
   };
 
   const navItems = [
@@ -97,6 +116,43 @@ const Index = () => {
 
             <Card className="glass p-6 border-border">
               <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <Icon name="Key" size={20} />
+                VPN Код
+              </h3>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="flex-1 bg-muted/20 rounded-lg p-3 font-mono text-lg text-center">
+                  {selectedRegion.vpnCode}
+                </div>
+                <Button onClick={copyVpnCode} size="icon" variant="outline">
+                  <Icon name="Copy" size={18} />
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground text-center">
+                Используйте этот код для подключения к VPN
+              </p>
+            </Card>
+
+            <Card className="glass p-6 border-border">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <Icon name="Terminal" size={20} />
+                Быстрое подключение
+              </h3>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Введите VPN код"
+                  value={vpnInput}
+                  onChange={(e) => setVpnInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleVpnConnect()}
+                  className="bg-muted/20 border-border"
+                />
+                <Button onClick={handleVpnConnect} className="bg-primary hover:bg-primary/90">
+                  <Icon name="Play" size={18} />
+                </Button>
+              </div>
+            </Card>
+
+            <Card className="glass p-6 border-border">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
                 <Icon name="BarChart3" size={20} />
                 Статистика
               </h3>
@@ -130,6 +186,7 @@ const Index = () => {
                   <div className="flex-1">
                     <p className="font-semibold text-lg">{region.name}</p>
                     <p className="text-sm text-muted-foreground">{region.code}</p>
+                    <p className="text-xs text-primary font-mono mt-1">{region.vpnCode}</p>
                   </div>
                   {selectedRegion.code === region.code && (
                     <Icon name="CheckCircle" className="text-primary" size={24} />
